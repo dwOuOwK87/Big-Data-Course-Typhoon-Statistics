@@ -7,6 +7,14 @@ docker --version
 docker compose version
 ```
 
+在 `env_files/mariadb/.env` 中設定以下環境變量
+```ini
+MARIADB_ROOT_PASSWORD = "your_root_password"
+MARIADB_DATABASE = "your_database_name"
+MARIADB_USER = "your_database_username"
+MARIADB_PASSWORD = "your_user_password"
+```
+
 執行以下命令來創建環境
 ```bash
 docker compose up -d
