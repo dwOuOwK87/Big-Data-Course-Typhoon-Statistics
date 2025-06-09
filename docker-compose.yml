@@ -1,0 +1,20 @@
+services:
+
+  mariadb:
+    container_name: mariadb-container
+    build:
+      context: .
+      dockerfile: docker/mariadb/Dockerfile
+    ports:
+      - 3306:3306
+    env_file: env_files/mariadb/.env
+    
+  python:
+    container_name: python-container
+    build:
+      context: .
+      dockerfile: docker/python/Dockerfile
+    ports:
+      - 8000:8000
+    working_dir: /app
+    command: tail -f /dev/null # 讓容器保持開啟，使得可以使用此服務跑一些 python 腳本
