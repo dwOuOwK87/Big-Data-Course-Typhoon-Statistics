@@ -7,17 +7,22 @@ from typing import List, Dict, Optional
 def get_data(year: int) -> Optional[List[Dict]]:
     """
     給一個 `年份 (西元)` 作為傳入值，回傳一個 json 的列表，其中的元素有以下屬性
+    
     - `id`：                       颱風的編號
     - `cht_name`：                 颱風的中文名稱
     - `eng_name`：                 颱風的英文名稱
     - `genesis_datetime`：         颱風的生成時間
     - `dead_datetime`：            颱風的死亡時間
-    - `max_intensity`：            最強強度
+    - `max_intensity`：            每幾分鐘測得的所有 `平均` 風速中的最大風速 (m/s)
+    - `max_gust_speed`：           每幾分鐘測得的所有 `最大` 風速中的最大風速 (m/s)
     - `min_pressure`：             最低氣壓 (hPa)
-    - `max_gust_speed`：           最大風速 (m/s)
     - `max_class7_radius`：        7 級風暴的最大半徑 (km)
     - `max_class10_radius`：       10 級風暴的最大半徑 (km)
     - `warning_count`：            警報的次數
+
+    ---
+
+    補充：1994 年之前是用 1 分鐘平均，而 1995 年之後是用 10 分鐘平均。
     """
     try:
         payload = { "year": year } # 指定獲取某一年份的資料
@@ -61,6 +66,6 @@ def write_records_to_database() -> None:
 
 if __name__ == "__main__":
     # 執行這個腳本時要執行的指令寫在這裡
-    pass
+    print(get_data(2024))
 
     
