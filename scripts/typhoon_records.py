@@ -7,18 +7,16 @@ from typing import List, Dict, Optional
 def get_data(year: int) -> Optional[List[Dict]]:
     """
     給一個 `年份 (西元)` 作為傳入值，回傳一個 json 的列表，其中的元素有以下屬性
-    
     - `id`：                       颱風的編號
     - `cht_name`：                 颱風的中文名稱
     - `eng_name`：                 颱風的英文名稱
-    - `official_path_category`：   颱風的路徑類別，參考[這個網址](https://www.cwa.gov.tw/V8/C/K/Encyclopedia/typhoon/typhoon_list02.html#typhoon-41)
-    - `sea_start_datetime`：       颱風警報的開始時間
-    - `sea_end_datetime`：         颱風警報的結束時間
-    - `max_intensity`：            最強強度 (近臺)
-    - `min_pressure`：             最低氣壓 (近臺)
-    - `max_wind_speed`：           最大風速 (近臺)
-    - `max_range7`：               7 級風暴的最大半徑 (近臺)
-    - `max_range10`：              10 級風暴的最大半徑 (近臺)
+    - `genesis_datetime`：         颱風的生成時間
+    - `dead_datetime`：            颱風的死亡時間
+    - `max_intensity`：            最強強度
+    - `min_pressure`：             最低氣壓 (hPa)
+    - `max_gust_speed`：           最大風速 (m/s)
+    - `max_class7_radius`：        7 級風暴的最大半徑 (km)
+    - `max_class10_radius`：       10 級風暴的最大半徑 (km)
     - `warning_count`：            警報的次數
     """
     try:
@@ -26,7 +24,7 @@ def get_data(year: int) -> Optional[List[Dict]]:
         headers = { "X-Requested-With": "XMLHttpRequest" } # 必須要加上這個才能正確獲取資料
 
         response = requests.post(
-            url="https://rdc28.cwa.gov.tw/TDB/public/warning_typhoon_list/get_warning_typhoon",
+            url="https://rdc28.cwa.gov.tw/TDB/public/typhoon_list/get_typhoon",
             data=payload,
             headers=headers,
         )
