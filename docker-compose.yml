@@ -7,7 +7,11 @@ services:
       dockerfile: docker/mariadb/Dockerfile
     ports:
       - 3306:3306
-    env_file: env_files/mariadb/.env
+    environment:
+      MARIADB_ROOT_PASSWORD: nutn@password
+      MARIADB_DATABASE: nutn
+      MARIADB_USER: nutn
+      MARIADB_PASSWORD: nutn@password
     
   python:
     container_name: python-container
