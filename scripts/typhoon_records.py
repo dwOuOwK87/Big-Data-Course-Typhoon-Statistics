@@ -4,7 +4,7 @@ import json
 from typing import List, Dict, Optional
 
 
-def get_data(year: int) -> Optional[List[Dict]]:
+def get_records(year: int) -> Optional[List[Dict]]:
     """
     給一個 `年份 (西元)` 作為傳入值，回傳一個 json 的列表，其中的元素有以下屬性
     
@@ -42,30 +42,105 @@ def get_data(year: int) -> Optional[List[Dict]]:
 
         return data
     
-    except requests.HTTPError as e:
+    except Exception as e:
         print(f"在獲取 {year} 年的資料時發生錯誤，錯誤訊息:\n{e}")
         return None
     
 
-def write_records_to_database() -> None:
+def try_convert_str_to_int(string: str) -> Optional[int]:
+    try:
+        return int(string)
+    except:
+        return None
+    
+
+def write_records_to_database(start_year: int, end_year: Optional[int] = None) -> None:
+    """
+    將 `[start_year, end_year]` 區間的颱風紀錄寫入資料庫的 `typhoon_records` 表中。  
+    如果不提供 `end_year` 則只會寫入 `start_year` 的颱風資料。
+    """
+    if end_year is None:
+        end_year = start_year
+
     try:
         with pymysql.connect(
             user="nutn",
             password="nutn@password",
-            host="mariadb-container",
+            host="localhost", # 如果你不是用 docker compose 執行 python 腳本的話，這裡要改成 localhost
             port=3306,
             database="nutn"
         ) as conn:
             with conn.cursor() as cur:
-                # 做一些資料庫的操作
+                cur.execute("DROP TABLE IF EXISTS typhoon_records")
+
+                cur.execute(
+                    """
+                    CREATE TABLE typhoon_records (
+                        id INT PRIMARY KEY,
+                        cht_name VARCHAR(100),
+                        eng_name VARCHAR(100),
+                        genesis_datetime DATETIME,
+                        dead_datetime DATETIME,
+                        max_wind_speed INT,
+                        max_gust_speed INT,
+                        min_pressure INT,
+                        max_class7_radius INT,
+                        max_class10_radius INT,
+                        warning_count INT
+                    )
+                    """
+                )
+
+                for year in range(start_year, end_year + 1):
+                    records = get_records(year)
+
+                    if records is None:
+                        continue
+
+                    for record in records:
+                        id = record.get("id")
+                        
+                        if id is None:
+                            continue
+
+                        cht_name           = record.get("cht_name")
+                        eng_name           = record.get("eng_name")
+                        genesis_datetime   = record.get("genesis_datetime")
+                        dead_datetime      = record.get("dead_datetime")
+
+                        # max_intensity 理應是最大颱風強度
+                        # API 將 max_intensity 當作了最大風速，這裡用更好理解的名稱代替
+                        max_wind_speed     = try_convert_str_to_int( record.get("max_intensity") ) 
+
+                        max_gust_speed     = try_convert_str_to_int (record.get("max_gust_speed") )
+                        min_pressure       = try_convert_str_to_int( record.get("min_pressure") )
+                        max_class7_radius  = try_convert_str_to_int( record.get("max_class7_radius") )
+                        max_class10_radius = try_convert_str_to_int( record.get("max_class10_radius") )
+                        warning_count      = try_convert_str_to_int( record.get("warning_count") )
+
+                        cur.execute(
+                            """
+                            INSERT INTO typhoon_records(
+                                id, cht_name, eng_name, genesis_datetime, dead_datetime, max_wind_speed, max_gust_speed,
+                                min_pressure, max_class7_radius, max_class10_radius, warning_count
+                            )
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            """,
+                            (
+                                id, cht_name, eng_name, genesis_datetime, dead_datetime, max_wind_speed, max_gust_speed, 
+                                min_pressure, max_class7_radius, max_class10_radius, warning_count
+                            )
+                        ) 
+
                 conn.commit()
 
     except Exception as e:
-        print(e)
+        print(f"在寫入資料庫時發生錯誤，錯誤訊息:\n{e}")
+
 
 
 if __name__ == "__main__":
     # 執行這個腳本時要執行的指令寫在這裡
-    print(get_data(2024))
+    write_records_to_database(2014, 2024)
 
     
