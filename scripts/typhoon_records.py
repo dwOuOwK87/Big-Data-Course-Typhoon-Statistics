@@ -66,7 +66,7 @@ def write_records_to_database(start_year: int, end_year: Optional[int] = None) -
         with pymysql.connect(
             user="nutn",
             password="nutn@password",
-            host="localhost", # 如果你不是用 docker compose 執行 python 腳本的話，這裡要改成 localhost
+            host="mariadb-container", # 如果你不是用 docker compose 執行 python 腳本的話，這裡要改成 localhost
             port=3306,
             database="nutn"
         ) as conn:
