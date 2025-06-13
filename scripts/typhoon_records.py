@@ -2,6 +2,8 @@ import pymysql
 import requests
 import json
 from typing import List, Dict, Optional
+import argparse
+from tqdm import trange
 
 
 def get_records(year: int) -> Optional[List[Dict]]:
@@ -91,7 +93,7 @@ def write_records_to_database(start_year: int, end_year: Optional[int] = None) -
                     """
                 )
 
-                for year in range(start_year, end_year + 1):
+                for year in trange(start_year, end_year + 1):
                     records = get_records(year)
 
                     if records is None:
@@ -112,7 +114,7 @@ def write_records_to_database(start_year: int, end_year: Optional[int] = None) -
                         # API 將 max_intensity 當作了最大風速，這裡用更好理解的名稱代替
                         max_wind_speed     = try_convert_str_to_int( record.get("max_intensity") ) 
 
-                        max_gust_speed     = try_convert_str_to_int (record.get("max_gust_speed") )
+                        max_gust_speed     = try_convert_str_to_int( record.get("max_gust_speed") )
                         min_pressure       = try_convert_str_to_int( record.get("min_pressure") )
                         max_class7_radius  = try_convert_str_to_int( record.get("max_class7_radius") )
                         max_class10_radius = try_convert_str_to_int( record.get("max_class10_radius") )
@@ -141,6 +143,11 @@ def write_records_to_database(start_year: int, end_year: Optional[int] = None) -
 
 if __name__ == "__main__":
     # 執行這個腳本時要執行的指令寫在這裡
-    write_records_to_database(2014, 2024)
+    parser = argparse.ArgumentParser()
 
-    
+    parser.add_argument("start", help="資料的起始年分(西元)", type=int)
+    parser.add_argument("end", help="資料的結束年分(西元)", type=int, default=None, nargs='?')
+
+    args = parser.parse_args()
+
+    write_records_to_database(args.start, args.end)
