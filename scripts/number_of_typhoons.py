@@ -9,7 +9,7 @@ def get_number_of_typhoons():
         with pymysql.connect(
             user="nutn",
             password="nutn@password",
-            host="localhost", # 如果你不是用 docker compose 執行 python 腳本的話，這裡要改成 localhost
+            host="mariadb-container", # 如果你不是用 docker compose 執行 python 腳本的話，這裡要改成 localhost
             port=3306,
             database="nutn"
         ) as conn:
