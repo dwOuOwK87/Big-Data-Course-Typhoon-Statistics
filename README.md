@@ -18,15 +18,21 @@ docker compose exec mariadb mariadb --user=nutn --password=nutn@password nutn
 docker compose exec python python path/to/your/script.py
 ```
 
-### 將西北太平洋的颱風紀錄寫入資料庫
-比如你想要 2000 年到 2024 年的資料，這樣輸入
-```bash
-docker compose exec python python scripts/typhoon_records.py 2000 2024
-```
-如果你只想要 2024 年的資料，這樣輸入
-```bash
-docker compose exec python python scripts/typhoon_records.py 2024
-```
+- ### 將西北太平洋的颱風紀錄寫入資料庫
+    比如你想要 2000 年到 2024 年的資料，這樣輸入
+    ```bash
+    docker compose exec python python scripts/typhoon_records.py 2000 2024
+    ```
+    如果你只想要 2024 年的資料，這樣輸入
+    ```bash
+    docker compose exec python python scripts/typhoon_records.py 2024
+    ```
+
+- ### 將每年西北太平洋的颱風總數量，以及侵台的颱風數量，寫成一張新表
+    輸入以下指令
+    ```bash
+    docker compose exec python python scripts/number_of_typhoons.py
+    ```
 
 ## 有關 docker compose
 以下是一些常見的命令
