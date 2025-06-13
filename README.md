@@ -27,12 +27,15 @@ docker compose exec python python path/to/your/script.py
     ```bash
     docker compose exec python python scripts/typhoon_records.py 2024
     ```
+    資料會被寫入 `typhoon_records` 表中。
+    
 
 - ### 將每年西北太平洋的颱風總數量，以及侵台的颱風數量，寫成一張新表
     輸入以下指令
     ```bash
     docker compose exec python python scripts/number_of_typhoons.py
     ```
+    資料會被寫入 `number_of_typhoons` 表中。
 
 ## 有關 docker compose
 以下是一些常見的命令
