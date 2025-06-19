@@ -18,6 +18,8 @@ docker compose exec mariadb mariadb --user=nutn --password=nutn@password nutn
 docker compose exec python python path/to/your/script.py
 ```
 
+**_注意：_**  以下腳本必須從上往下依序執行，如果直接跳到後面的腳本執行，會出問題。
+
 - ### 將西北太平洋的颱風紀錄寫入資料庫
     比如你想要 2000 年到 2024 年的資料，這樣輸入
     ```bash
@@ -36,6 +38,12 @@ docker compose exec python python path/to/your/script.py
     docker compose exec python python scripts/number_of_typhoons.py
     ```
     資料會被寫入 `number_of_typhoons` 表中。
+
+- ### 顯示圖表
+    輸入以下指令
+    ```bash
+    docker compose exec python python scripts/show_diagrams.py
+    ```
 
 ## 有關 docker compose
 以下是一些常見的命令
