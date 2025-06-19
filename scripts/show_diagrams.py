@@ -80,19 +80,19 @@ if __name__ == "__main__":
             port=3306,
             database="nutn"
         ) as conn:
-            with conn.cursor() as cur:
-                # 讀檔
-                df = pd.read_sql_query("SELECT * FROM number_of_typhoons", conn)
+            # 讀檔
+            df = pd.read_sql_query("SELECT * FROM number_of_typhoons", conn)
 
-                # 折出年份、總颱風數、侵台颱風數
-                years = df["year"]
-                total = df["total_count"]
-                hit = df["count_entered"]
+            # 折出年份、總颱風數、侵台颱風數
+            years = df["year"]
+            total = df["total_count"]
+            hit = df["count_entered"]
 
-                ratio = hit / total
+            ratio = hit / total
 
-                # 顯示圖表
-                show_diagrams(years, total, hit, ratio)
+            # 顯示圖表
+            show_diagrams(years, total, hit, ratio)
+                
 
     except Exception as e:
         print(f"在寫入資料庫時發生錯誤，錯誤訊息:\n{e}")
