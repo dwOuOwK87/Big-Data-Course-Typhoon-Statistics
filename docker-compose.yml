@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: docker/python/Dockerfile
-    ports:
-      - 8000:8000
+    volumes:
+      - .:/app  # 把當前專案目錄掛載進容器的 /app
     working_dir: /app
     command: tail -f /dev/null # 讓容器保持開啟，使得可以使用此服務跑一些 python 腳本
